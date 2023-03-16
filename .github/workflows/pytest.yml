@@ -33,7 +33,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: poetry-cache-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.poetry-version }}-workflow-${{ hashFiles('**/.github/workflows/*.yaml') }}-lock-${{ hashFiles('**/poetry.lock') }}
+          key: poetry-cache-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.poetry-version }}-workflow-${{ hashFiles('**/.github/workflows/pytest.yml') }}-lock-${{ hashFiles('**/poetry.lock') }}
 
       # cacheがヒットする場合はインストールをスキップする
       - name: install dependencies
