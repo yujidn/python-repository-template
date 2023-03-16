@@ -43,7 +43,7 @@ jobs:
       # pytestを実行する -> カバレッジもあわせてみる
       - name: Test with pytest
         run: |
-          poetry run python -m pytest -v --cov=liquid_face_anti_spoofing --cov-report=term-missin
+          poetry run python -m pytest -v --cov=liquid_face_anti_spoofing --cov-report=term-missing
 
 #     slack_notification:
 #       if: always()
