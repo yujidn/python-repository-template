@@ -1,39 +1,46 @@
 name: lint check
-on: push
 
-env:
-  PYTHON_VERSION: "3.8"
-  POETRY_VERSION: "1.4.0"
+on: push
 
 jobs:
   lint:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        poetry-version: ["latest", "1.8.4"]
     runs-on: ubuntu-latest
 
     steps:
-      # checkout repository
-      - name: checkout
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # install python
-      - uses: actions/setup-python@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: ${{ matrix.python-version }}
 
-      # cacheがヒットする場合はインストールをスキップする
-      - name: install dependencies
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v3
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
+
+      - name: Add Poetry to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install pre-commit
         run: |
           pip install pre-commit
 
-      # pre-commit cache
-      - name: pre-commit cache
-        id: cached-pre-commit-dependencies
+      - name: Cache pre-commit
+        id: cache-pre-commit
         uses: actions/cache@v3
         with:
           path: ~/.cache/pre-commit/
-          key: pre-commit-cache-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}-${{ hashFiles('**/.pre-commit-config.yaml') }}
+          key: pre-commit-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.poetry-version }}-${{ hashFiles('**/.pre-commit-config.yaml') }}
 
-      # pre-commit run
-      - name: run pre-commit
+      - name: Run pre-commit
         run: |
           pre-commit install
           pre-commit run --all-files
+

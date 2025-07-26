@@ -5,8 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
-        poetry-version: ["1.4.0"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        poetry-version: ["latest", "1.8.4"]
 
     steps:
       # checkout repository
